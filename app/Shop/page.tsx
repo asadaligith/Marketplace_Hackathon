@@ -1,21 +1,59 @@
-import React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { HiOutlineViewGrid } from "react-icons/hi";
 import { RxDividerVertical } from "react-icons/rx";
 import { BsViewList } from "react-icons/bs";
 import Image from "next/image";
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import Link from "next/link";
+
+interface IProduct {
+  _id: string;
+  name: string;
+  price: number;
+  description: string;
+  discountPercentage: number;
+  isFeaturedProduct: boolean;
+  stockLevel: number;
+  category: string;
+  image: string;
+}
 
 export default function Shop() {
-  const products = [
-    { id: 1, name: "Trenton modular sofa_3", price: "Rs. 25,000.00", image: "/image1.jpg" },
-    { id: 2, name: "Granite dining table with dining chair", price: "Rs. 30,000.00", image: "/image2.jpg" },
-    { id: 3, name: "Outdoor bar table and stool", price: "Rs. 20,000.00", image: "/image3.jpg" },
-    { id: 4, name: "Plain console with teak mirror", price: "Rs. 15,000.00", image: "/image4.jpg" },
-    { id: 5, name: "Grain coffee table", price: "Rs. 40,000.00", image: "/image5.jpg" },
-    { id: 6, name: "Kent coffee table", price: "Rs. 18,000.00", image: "/image6.jpg" },
-    { id: 7, name: "Round coffee table_color 2", price: "Rs. 22,000.00", image: "/image7.jpg" },
-    { id: 8, name: "Reclaimed teak coffee table", price: "Rs. 19,000.00", image: "/image8.jpg" },
-  ];
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data: IProduct[] = await client.fetch(
+          `*[_type == "product"] {
+            _id,
+            name,
+            price,
+            description,
+            discountPercentage,
+            isFeaturedProduct,
+            stockLevel,
+            category,
+            image
+          }`
+        );
+        setProducts(data);
+      } catch (err) {
+        setError("Failed to fetch products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -42,15 +80,8 @@ export default function Shop() {
           <BsViewList size={24} />
           <RxDividerVertical size={24} />
           <h2 className="text-[14px] sm:text-[16px] font-semibold">
-            Showing 1–8 of 32 results
+            Showing {products.length} results
           </h2>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <h3 className="text-[14px] sm:text-[16px]">Show</h3>
-          <button className="bg-white text-[#9F9F9F] px-4 py-2 rounded-md">8</button>
-          <h3 className="text-[14px] sm:text-[16px]">Sort by</h3>
-          <button className="bg-white text-[#9F9F9F] px-6 py-2 rounded-md">Default</button>
         </div>
       </section>
 
@@ -58,23 +89,33 @@ export default function Shop() {
       <main className="px-4 py-6">
         <div className="bg-white rounded-lg p-6 shadow-md">
           <h2 className="text-xl sm:text-2xl font-bold text-black mb-4">All Products</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <div key={product.id} className="text-left">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={400}
-                  height={400}
-                  className="rounded-lg object-cover"
-                />
-                <h4 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mt-4">
-                  {product.name}
-                </h4>
-                <p className="text-base sm:text-lg md:text-xl font-bold text-black">{product.price}</p>
-              </div>
-            ))}
-          </div>
+          {loading && <p>Loading products...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {!loading && !error && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <div key={product._id} className="text-left">
+                  <Link href={`/Shop/${product._id}`}>
+                  <div className="relative w-full h-64">
+                  <Image
+                    src={urlFor(product.image).url()}
+                    alt={product.name}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-t-lg"
+                  />
+                  </div>
+                  </Link>
+                  <div className="p-4">
+                  <h4 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mt-4">
+                    {product.name}
+                  </h4>
+                  <p className="text-base sm:text-lg md:text-xl font-bold text-black">${product.price}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>

@@ -3,11 +3,11 @@ import fetch from 'node-fetch';
 
 // Initialize Sanity client
 const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  projectId: "m4nd9v3k",
   dataset: "production",
   useCdn: false, // Set to true if you want faster reads
   apiVersion: '2025-01-13',
-  token: process.env.SANITY_API_TOKEN, 
+  token: "skwv5v8pHK4JatVhRhAHV0Kxhe6Hi8l3PTINGAbRO1rteJ90TgjgZDNFkpWrx4QoANkA81JSqbWBVmiKprQ8jpXUgOqYZ5Uy9xaG9QgO1HT4WodBYElhhYNR3RJG5aMnSghOPJwkBVEegLyVQMvQTwBUZscNcYjo6F842F7xAdYVjvvdRVKr", 
 });
 
 // Function to upload an image to Sanity
