@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+.yarn
 .yarn/install-state.gz
 
 # testing
@@ -12,25 +13,48 @@
 # next.js
 /.next/
 /out/
+/.astro/
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
 *.pem
+*.key
+*.crt
+*.cert
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
 # local env files
+.env
 .env*.local
+.env*.development
+.env*.production
+.env*.test
+.env*.example
+/.envrc
+/.secrets
 
-# vercel
+# Vercel, Netlify & Deployment
 .vercel
+.netlify
+.netlify/*
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Logs
+logs
+*.log
+logs/*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*

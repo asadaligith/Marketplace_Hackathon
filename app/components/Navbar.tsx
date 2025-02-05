@@ -30,7 +30,7 @@ function Navbar() {
         <Link href="#"><FaRegUser size={24} /></Link>
         <Link href="#"><IoIosSearch size={24} /></Link>
         <Link href="#"><CiHeart size={24} /></Link>
-        <Link href="#"><IoCartOutline size={24} /></Link>
+        <Link href="/cart"><IoCartOutline size={24} /></Link>
       </div>
 
       {/* Mobile Menu */}
