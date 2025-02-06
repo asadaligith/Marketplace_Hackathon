@@ -7,11 +7,11 @@ export const cartSlice = createSlice({
   initialState: [],
   reducers: {
       // add to cart functionality
-    add(state: any, action) {
-      let uuid = Math.floor(1000 + Math.random() * 9000)
-      let newobj = { ...action.payload, uuid }
-      state.push(newobj)
-    },
+      add(state: any, action) {
+        let uuid = Math.floor(1000 + Math.random() * 9000);
+        let newobj = { ...action.payload, uuid };
+        state.push(newobj);
+      },
      // delete from cart
      remove(state: any, { payload }) {
       return state.filter((val: any) => val.uuid !== payload)
@@ -20,9 +20,7 @@ export const cartSlice = createSlice({
      addition(state: any, action) {
       let obj = state.find(
         (val: any) =>
-          val.id == action.payload.id &&
-          val.color == action.payload.color &&
-          val.size == action.payload.size
+          val.id == action.payload.id 
       )
       if (obj) {
         ++obj.qty
@@ -35,10 +33,7 @@ export const cartSlice = createSlice({
     subraction(state: any, action) {
       let obj = state.find(
         (val: any) =>
-          val.id == action.payload.id &&
-          val.color == action.payload.color &&
-          val.size == action.payload.size
-      )
+          val.id == action.payload.id      )
       if (obj !== undefined) {
         --obj.qty
         let newState = state.filter((val: any) => val.uuid !== obj.uuid)

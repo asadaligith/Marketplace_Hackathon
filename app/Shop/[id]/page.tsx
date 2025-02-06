@@ -5,6 +5,10 @@ import { urlFor } from '@/sanity/lib/image';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'; 
+import { Button } from '@/components/ui/button';
+import { useDispatch } from 'react-redux';
+import { add, addition, subraction } from '@/app/Redux/features/cartSlice';
+import { Minus, Plus } from 'lucide-react';
 
 interface IProduct {
   _id: string;
@@ -16,6 +20,8 @@ interface IProduct {
   stockLevel: number;
   category: string;
   image: string;
+  qty:number,
+  
 }
 
 export default function ProductDetail() {
@@ -23,6 +29,11 @@ export default function ProductDetail() {
   const [product, setProduct] = useState<IProduct | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch()
+
+  const handleadd = (product:any)=>{
+    dispatch(add(product))
+  }
 
   useEffect(() => {
     if (!id) return;                                              //  Prevent fetching if ID is missing
@@ -88,7 +99,17 @@ export default function ProductDetail() {
         <h1 className='text-xl font-bold'> Stock: {product.stockLevel}</h1>
         <h1 className='text-xl font-bold'> Featured: {product.isFeaturedProduct ? "Yes" : "No"}</h1>
         <p className='text-lg font-semi-bold'>{product.description}</p>
+
+        <div className="md:w-[100px] h-[40px] flex justify-center  lg:justify-between p-3 items-center rounded-[62px] bg-[#F0F0F0] text-gray-400 absolute bottom-0 right-0 ">
+                              <button onClick={()=>dispatch(subraction(product))} ><Minus/></button>
+                             {product.qty}
+                              <button  onClick={()=>dispatch(addition(product))}><Plus/></button>
+                            </div>
+
+        <Button onClick={()=>handleadd(product)} className="bg-blue-600 text-white w-28 active:bg-blue-800">Add to Card</Button>
+
       </div>
+
 
 
 

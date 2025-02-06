@@ -1,13 +1,11 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
-import { HiOutlineViewGrid } from "react-icons/hi";
-import { RxDividerVertical } from "react-icons/rx";
-import { BsViewList } from "react-icons/bs";
 import Image from "next/image";
+import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
-import Link from "next/link";
+import SearchFilter from "../components/SearchFilter";
+import Pagination from "../components/Pagination"; 
 
 interface IProduct {
   _id: string;
@@ -21,11 +19,18 @@ interface IProduct {
   image: string;
 }
 
+const itemsPerPage = 8; // Number of products per page
+
 export default function Shop() {
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Pagination States
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Fetch products from Sanity CMS
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -45,6 +50,7 @@ export default function Shop() {
           }`
         );
         setProducts(data);
+        setFilteredProducts(data); // Initialize filtered products
       } catch (err) {
         setError("Failed to fetch products. Please try again later.");
       } finally {
@@ -55,6 +61,20 @@ export default function Shop() {
     fetchData();
   }, []);
 
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Slice the products array for pagination
+  const displayedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Header Section */}
@@ -64,26 +84,12 @@ export default function Shop() {
       >
         <div className="absolute inset-0 bg-black bg-opacity-30"></div>
         <div className="relative z-10 flex items-center justify-center h-full text-white">
-          <div>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-Poppins text-center">Shop</h1>
-            <p className="text-base sm:text-xl md:text-2xl mt-2">Home &gt; Shop</p>
-          </div>
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-Poppins text-center">Shop</h1>
         </div>
       </header>
 
-      {/* Filter & Sorting Section */}
-      <section className="flex flex-wrap justify-between items-center w-full h-auto bg-[#FAF4F4] mt-[20px] px-4 py-4 md:px-8">
-        <div className="flex items-center gap-4 mb-4 md:mb-0">
-          <SlidersHorizontal size={24} />
-          <h6 className="text-[16px] sm:text-[18px]">Filter</h6>
-          <HiOutlineViewGrid size={24} />
-          <BsViewList size={24} />
-          <RxDividerVertical size={24} />
-          <h2 className="text-[14px] sm:text-[16px] font-semibold">
-            Showing {products.length} results
-          </h2>
-        </div>
-      </section>
+      {/* Search & Filter Section */}
+      <SearchFilter products={products} setFilteredProducts={setFilteredProducts} />
 
       {/* Products Section */}
       <main className="px-4 py-6">
@@ -93,28 +99,39 @@ export default function Shop() {
           {error && <p className="text-red-500">{error}</p>}
           {!loading && !error && (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {products.map((product) => (
+              {displayedProducts.map((product) => (
                 <div key={product._id} className="text-left">
                   <Link href={`/Shop/${product._id}`}>
-                  <div className="relative w-full h-64">
-                  <Image
-                    src={urlFor(product.image).url()}
-                    alt={product.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-t-lg"
-                  />
-                  </div>
+                    <div className="relative w-full h-64">
+                      <Image
+                        src={urlFor(product.image).url()}
+                        alt={product.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-t-lg"
+                      />
+                    </div>
                   </Link>
                   <div className="p-4">
-                  <h4 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mt-4">
-                    {product.name}
-                  </h4>
-                  <p className="text-base sm:text-lg md:text-xl font-bold text-black">${product.price}</p>
+                    <h4 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 mt-4">
+                      {product.name}
+                    </h4>
+                    <p className="text-base sm:text-lg md:text-xl font-bold text-black">
+                      ${product.price}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
+          )}
+
+          {/* Pagination Section - Rendered only at the bottom */}
+          {!loading && !error && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           )}
         </div>
       </main>
