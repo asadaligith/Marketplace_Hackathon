@@ -1,12 +1,12 @@
-
-
-const nextConfig ={
-    images:{
-        remotePatterns:[
+const nextConfig = {
+    images: {
+        remotePatterns: [
             {
-                    hostname: "cdn.sanity.io",
+                hostname: "cdn.sanity.io",
             }
         ]
-    }
+    },
+    
 };
+
 export default nextConfig;

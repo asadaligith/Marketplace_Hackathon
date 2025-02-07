@@ -5,6 +5,7 @@ import { IoIosSearch } from "react-icons/io";
 import { CiHeart } from "react-icons/ci";
 import { IoCartOutline } from "react-icons/io5";
 import MenuBar from './MenuBar';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 function Navbar() {
   return (
@@ -22,6 +23,12 @@ function Navbar() {
           <li><Link href="/Shop">Shop</Link></li>
           <li><Link href="/About">About</Link></li>
           <li><Link href="/Contact">Contact</Link></li>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </ul>
       </div>
 
