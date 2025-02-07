@@ -2,13 +2,13 @@ import { Button } from '@/components/ui/button';
 import { useDispatch } from 'react-redux';
 import { toast, ToastContainer, Bounce } from 'react-toastify';
 import "react-toastify/ReactToastify.css";
-import { add } from '../Redux/features/cartSlice';
+import { add, remove } from '../Redux/features/cartSlice';
 
-function Toastify({ cartItem }: any) {
+function Toastify({ product }: any) {
   const dispatch = useDispatch();
 
-  const handleadd = (cartItem: any) => {
-    dispatch(add(cartItem));
+  const handleadd = (product: any) => {
+    dispatch(add(product));
     toast.success('Product added successfully!', {
       position: "bottom-right",
       autoClose: 5000,
@@ -22,9 +22,10 @@ function Toastify({ cartItem }: any) {
     });
   };
 
+
   return (
     <>
-      <div onClick={() => handleadd(cartItem)}>
+      <div onClick={() => handleadd(product)}>
         <Button className="bg-black text-white lg:w-[300px]">Add to Cart</Button>
       </div>
       <ToastContainer

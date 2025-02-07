@@ -8,6 +8,10 @@ import {
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import Link from "next/link";
+import { CiHeart } from "react-icons/ci";
+import { FaRegUser } from "react-icons/fa";
+import { IoIosSearch } from "react-icons/io";
+import { IoCartOutline } from "react-icons/io5";
 
 export default function MenuBar() {
   return (
@@ -41,7 +45,22 @@ export default function MenuBar() {
                   <Link href="/Contact" className="hover:text-gray-600">
                     Contact
                   </Link>
+                
                 </li>
+                <li>
+        <Link href="/cart"><IoCartOutline size={24} /></Link>
+               </li>
+               <li> 
+                 <Link href="#"><IoIosSearch size={24} /></Link> 
+                 </li>
+              <li>
+              <Link href="#"><CiHeart size={24} /></Link>
+              </li>
+
+              <li>
+              <Link href="#"><FaRegUser size={24} /></Link>
+              </li>
+
               </ul>
             </SheetDescription>
           </SheetHeader>
