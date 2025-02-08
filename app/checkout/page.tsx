@@ -121,7 +121,7 @@ function Checkout() {
       dispatch(removeOrderFromLocalStorage())
       // Clear form fields after submission
       form.reset();
-      router.push("/payment");
+      // router.push("/payment");
     } catch (error) {
       console.error("Error submitting form:", error); // Debugging log
       notifyError("Failed to place the order. Please try again.");
